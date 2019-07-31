@@ -38,9 +38,14 @@ var pic = class Pic extends Form {
         return this._image;
     }
 
-    draw(scale = true) {
+    draw(scale) {
         let width = this.ctx().canvas.width,
             height = this.ctx().canvas.height;
+
+        if(typeof scale === 'undefined') {
+
+            scale = true;
+        }
 
         if(scale === false) {
 
