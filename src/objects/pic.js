@@ -21,6 +21,8 @@ var pic = class Pic extends Form {
         this._x = x;
         this._y = y;
         this._image = image;
+
+        this._offset = [0, 0];
     }
 
     x() {
@@ -38,9 +40,17 @@ var pic = class Pic extends Form {
         return this._image;
     }
 
-    draw(scale) {
+    offset(x, y) {
+
+        this._offset = [x, y];
+
+        return this;
+    }
+
+    draw(scale, offset) {
         let width = this.ctx().canvas.width,
-            height = this.ctx().canvas.height;
+            height = this.ctx().canvas.height,
+            position = [this.x(), this.y()];
 
         if(typeof scale === 'undefined') {
 
@@ -53,11 +63,16 @@ var pic = class Pic extends Form {
             height = this.image().height;
         }
 
+        if(offset) {
+
+            position = this._offset;
+        }
+
         this.ctx().drawImage(
             this.image(),
             this.x(), this.y(), //offset
             this._image.width, this._image.height, //image dimension
-            this.x(), this.y(), //offset
+            position[0], position[1], //offset
             width, height
         );
 
