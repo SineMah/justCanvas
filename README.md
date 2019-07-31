@@ -12,6 +12,7 @@ It provides shapes and basic elements. An animation endpoint is included.
 
 Draw images with `image(img, x, y)` 
 or more detailed e.g. zoomed with `imageZoom(img, zoomFactor, x, y)` 
+or moved images with `imagePointer(img, x, y)`
 
 ## Usage
 
