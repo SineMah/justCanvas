@@ -5,8 +5,8 @@ import Bezier from '../objects/bezier.js';
 import Circle from '../objects/circle.js';
 import Rectangle from '../objects/rectangle.js';
 import Pic from '../objects/pic.js';
-//
-import Events from '../helpers/events.js';
+
+import Event from "../helpers/event.js";
 
 var Draw = class Draw {
 
@@ -74,23 +74,15 @@ var Draw = class Draw {
     }
 
     on(eventName, callback) {
-        let id = this.current().id();
+        let e = new Event(this._current._id, eventName, callback);
 
-        if(typeof window.justCanvasElements[id].events === 'undefined') {
+        e.shape = this._current;
+        e.canvas = this._ctx.canvas.id;
 
-            window.justCanvasElements[id].events = [];
-        }
-
-        window.justCanvasElements[id].events.push(eventName);
-
-        if(typeof window.justCanvasCallbacks[id] === 'undefined') {
-
-            window.justCanvasCallbacks[id] = {};
-        }
-
-        window.justCanvasCallbacks[id][eventName] = callback;
-
-        Events.init(eventName, id);
+        /**
+         * var EventStore window.eventStore
+         */
+        window.eventStore.add(e);
 
         return this;
     }
