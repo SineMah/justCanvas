@@ -4,7 +4,7 @@ import Form from '../objects/form.js';
 
 var pic = class Pic extends Form {
 
-	constructor(ctx, image, x, y) {
+    constructor(ctx, image, x, y) {
 
         super(ctx);
 
@@ -21,31 +21,39 @@ var pic = class Pic extends Form {
         this._x = x;
         this._y = y;
         this._image = image;
-	}
+    }
 
-	x() {
+    x() {
 
-	    return this._x;
+        return this._x;
     }
 
     y() {
 
-	    return this._y;
+        return this._y;
     }
 
     image() {
 
-	    return this._image;
+        return this._image;
     }
 
-    draw() {
+    draw(scale = true) {
+        let width = this.ctx().canvas.width,
+            height = this.ctx().canvas.height;
+
+        if(scale === false) {
+
+            width = this.image().width;
+            height = this.image().height;
+        }
 
         this.ctx().drawImage(
             this.image(),
             this.x(), this.y(), //offset
             this._image.width, this._image.height, //image dimension
             this.x(), this.y(), //offset
-            this.ctx().canvas.width, this.ctx().canvas.height
+            width, height
         );
 
         return this;
