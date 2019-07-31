@@ -5,7 +5,7 @@ import Bezier from '../objects/bezier.js';
 import Circle from '../objects/circle.js';
 import Rectangle from '../objects/rectangle.js';
 import Pic from '../objects/pic.js';
-
+//
 import Events from '../helpers/events.js';
 
 var Draw = class Draw {
@@ -116,7 +116,7 @@ var Draw = class Draw {
         return this;
     }
 
-    line(coordinates) {      
+    line(coordinates) {
         let line = new Line(this.ctx());
 
         line
@@ -209,6 +209,19 @@ var Draw = class Draw {
         let image = new Pic(this.ctx(), img, x, y);
 
         image.draw(scale);
+
+        this.current(image);
+        this.add(image);
+
+        return this;
+    }
+
+    imagePointer(img, x, y) {
+        let image = new Pic(this.ctx(), img);
+
+        image.offset(x, y);
+
+        image.draw(false, true);
 
         this.current(image);
         this.add(image);
