@@ -56,6 +56,11 @@ var form = class Form {
 
         return this;
     }
+
+	inShape() {
+
+		return true;
+	}
 };
 
 export default form;
