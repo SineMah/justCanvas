@@ -6,6 +6,8 @@ import Circle from '../objects/circle.js';
 import Rectangle from '../objects/rectangle.js';
 import Pic from '../objects/pic.js';
 
+import Events from '../helpers/events.js';
+
 var Draw = class Draw {
 
     constructor(id) {
@@ -67,6 +69,28 @@ var Draw = class Draw {
     close() {
 
         this.ctx().closePath();
+
+        return this;
+    }
+
+    on(eventName, callback) {
+        let id = this.current().id();
+
+        if(typeof window.justCanvasElements[id].events === 'undefined') {
+
+            window.justCanvasElements[id].events = [];
+        }
+
+        window.justCanvasElements[id].events.push(eventName);
+
+        if(typeof window.justCanvasCallbacks[id] === 'undefined') {
+
+            window.justCanvasCallbacks[id] = {};
+        }
+
+        window.justCanvasCallbacks[id][eventName] = callback;
+
+        Events.init(eventName, id);
 
         return this;
     }
