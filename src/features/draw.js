@@ -189,17 +189,26 @@ var Draw = class Draw {
         return this;
     }
 
-    image(img, x, y) {
+    image(img, scale, x, y) {
 
-        if(typeof x === 'undefined')
+        if(typeof x === 'undefined') {
+
             x = 0;
+        }
 
-        if(typeof y === 'undefined')
+        if(typeof y === 'undefined') {
+
             y = 0;
+        }
+
+        if(typeof scale === 'undefined') {
+
+            scale = true;
+        }
 
         let image = new Pic(this.ctx(), img, x, y);
 
-        image.draw();
+        image.draw(scale);
 
         this.current(image);
         this.add(image);
