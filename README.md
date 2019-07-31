@@ -54,6 +54,18 @@ As you can see it is possible to create new shapes from primitive ones.
 
 Let's dive deeper:
 
+### Paint an image
+```javascript 1.8
+let c = new Canvas();
+
+document.querySelector('body').innerHTML = c.getHtml();
+
+c.draw()
+    .begin()
+    .imagePointer(image, 1150, 10)
+    .close();
+```
+
 ### An animation
 
 ```javascript 1.8
