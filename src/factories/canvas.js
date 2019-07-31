@@ -15,12 +15,19 @@ var Canvas = class Canvas {
 		this._style = null;
 		this._draw = null;
 
+        if(typeof window.justCanvasElements !== 'object') {
+
+            window.justCanvasElements = {};
+        }
+
 	}
 
     id(value) {
 
-    	if(typeof value === 'undefined')
+    	if(typeof value === 'undefined') {
+
     		return this._id;
+        }
 
         this._id = value;
 
@@ -29,8 +36,10 @@ var Canvas = class Canvas {
 
     class(value) {
 
-    	if(typeof value === 'undefined')
+    	if(typeof value === 'undefined') {
+
     		return this._class;
+        }
 
         this._class = value;
 
@@ -39,8 +48,10 @@ var Canvas = class Canvas {
 
     width(value) {
 
-    	if(typeof value === 'undefined')
+    	if(typeof value === 'undefined') {
+
     		return this._width;
+        }
 
         this._width = value;
 
@@ -49,8 +60,10 @@ var Canvas = class Canvas {
 
     height(value) {
 
-    	if(typeof value === 'undefined')
+    	if(typeof value === 'undefined') {
+
     		return this._height;
+        }
 
         this._height = value;
 
@@ -59,8 +72,10 @@ var Canvas = class Canvas {
 
     style(value) {
 
-    	if(typeof value === 'undefined')
+    	if(typeof value === 'undefined') {
+
     		return this._style;
+        }
 
     	this._style = value;
 
@@ -90,8 +105,10 @@ var Canvas = class Canvas {
 
     draw() {
 
-    	if(this._draw === null)
+    	if(this._draw === null) {
+
     		this._draw = new Draw(this.id());
+        }
 
     	return this._draw;
     }
