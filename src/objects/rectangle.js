@@ -4,7 +4,7 @@ import Form from '../objects/form.js';
 
 var rectangle = class Rectangle extends Form {
 
-	constructor(ctx) {
+    constructor(ctx) {
 
         super(ctx);
 
@@ -12,7 +12,7 @@ var rectangle = class Rectangle extends Form {
         this._y = 0;
         this._height = 0;
         this._width = 0;
-	}
+    }
 
     coordinates(startX, startY) {
 
@@ -71,6 +71,18 @@ var rectangle = class Rectangle extends Form {
         this.ctx().fillRect(this.x(), this.y(), this.width(), this.height());
 
         return this;
+    }
+
+    inShape(position) {
+        let inShape = false;
+
+        if(position.top >= this._y && position.top <= this._y + this._height &&
+            position.left >= this._x && position.left <= this._x + this._width) {
+
+            inShape = true
+        }
+
+        return inShape;
     }
 };
 
