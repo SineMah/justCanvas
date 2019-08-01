@@ -1,10 +1,13 @@
 'use strict';
 
+import Dom from '../helpers/Dom.js';
+
 var eventStore = class EventStore {
 
     constructor() {
 
         this._events = {};
+        this._dom = new Dom();
 
         this._eventNames = [
             'click'
@@ -34,9 +37,22 @@ var eventStore = class EventStore {
             let event = this._events[eId];
 
             if(event.canvas === e.target.id && event.name === e.type) {
+                let pos = this._dom.getPosition(e.target);
 
-                // TODO proof is in shape
-                event.callback(e, event);
+                e.relativePosition = {
+                    top: pos.top,
+                    left: pos.left
+                };
+
+                e.elementPosition = {
+                    top: (e.y || e.pageY) - pos.top,
+                    left: (e.x || e.pageX) - pos.left
+                };
+
+                if(event.shape.inShape(e.elementPosition)) {
+
+                    event.callback(e, event);
+                }
             }
         }
     }
