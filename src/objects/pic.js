@@ -20,7 +20,13 @@ var pic = class Pic extends Form {
 
         this._x = x;
         this._y = y;
+
+        this._height = 0;
+        this._width = 0;
+
         this._image = image;
+
+        this._position = [0, 0];
 
         this._offset = [0, 0];
     }
@@ -76,6 +82,10 @@ var pic = class Pic extends Form {
             width, height
         );
 
+        this._position = position;
+        this._height = this._image.height;
+        this._width = this._image.width;
+
         return this;
     }
 
@@ -91,6 +101,20 @@ var pic = class Pic extends Form {
         );
 
         return this;
+    }
+
+    inShape(position) {
+        let x = this._position[0],
+            y = this._position[1],
+            inShape = false;
+
+        if(position.top >= y && position.top <= y + this._height &&
+            position.left >= x && position.left <= x + this._width) {
+
+            inShape = true
+        }
+
+        return inShape;
     }
 };
 
