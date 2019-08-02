@@ -5,7 +5,7 @@ import Calc from '../helpers/calc.js';
 
 var circle = class Circle extends Form {
 
-	constructor(ctx) {
+    constructor(ctx) {
 
         super(ctx);
 
@@ -15,7 +15,7 @@ var circle = class Circle extends Form {
         this._start = 0;
         this._end = 360;
         this._direction = false;
-	}
+    }
 
     r(value) {
 
@@ -83,15 +83,27 @@ var circle = class Circle extends Form {
     draw() {
 
         this.ctx().arc(
-            this.x(), 
-            this.y(), 
-            this.r(), 
-            Calc.degreesToRadians(this.start()), 
-            Calc.degreesToRadians(this.end()), 
+            this.x(),
+            this.y(),
+            this.r(),
+            Calc.degreesToRadians(this.start()),
+            Calc.degreesToRadians(this.end()),
             this.direction()
         );
 
         return this;
+    }
+
+    inShape(position) {
+        let inShape = false,
+            distance = Math.sqrt(Math.pow(position.left - this._x, 2) + Math.pow(position.top - this._y, 2));
+
+        if(distance <= this._r) {
+
+            inShape = true;
+        }
+
+        return inShape;
     }
 };
 
