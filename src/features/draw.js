@@ -87,6 +87,28 @@ var Draw = class Draw {
         return this;
     }
 
+    hover(cursor, callback) {
+        let e = new Event(this._current._id, 'mousemove', callback);
+
+        e.shape = this._current;
+        e.canvas = this._ctx.canvas.id;
+        e.custom = 'hover';
+
+        if(typeof cursor === 'undefined') {
+
+            cursor = 'pointer';
+        }
+
+        e.cursor = cursor;
+
+        /**
+         * var EventStore window.eventStore
+         */
+        window.eventStore.add(e);
+
+        return this;
+    }
+
     fill() {
 
         this.current().fill();

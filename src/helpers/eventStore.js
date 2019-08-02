@@ -9,8 +9,13 @@ var eventStore = class EventStore {
         this._events = {};
         this._dom = new Dom();
 
+        this._eventCount = {
+            hover: 0
+        };
+
         this._eventNames = [
-            'click'
+            'click',
+            'mousemove'
         ];
     }
 
@@ -25,6 +30,8 @@ var eventStore = class EventStore {
 
     toggle() {
 
+        this._eventCount.hover = 0;
+
         this._eventNames.forEach((eventName) => {
 
             window.addEventListener(eventName, (e) => this.find(e))
@@ -32,6 +39,8 @@ var eventStore = class EventStore {
     }
 
     find(e) {
+
+        this._eventCount.hover = 0;
 
         for(let eId in this._events) {
             let event = this._events[eId];
@@ -51,10 +60,36 @@ var eventStore = class EventStore {
 
                 if(event.shape.inShape(e.elementPosition)) {
 
-                    event.callback(e, event);
+                    this.executeCustom(event);
+
+                    if(typeof event.callback === 'function') {
+
+                        event.callback(e, event);
+                    }
+                }
+
+                if(this._eventCount.hover > 0) {
+                    let cursor = event.cursor || 'auto';
+
+                    document.querySelector(`#${event.canvas}`).style.cursor = cursor;
+                }else {
+
+                    document.querySelector(`#${event.canvas}`).style.cursor = 'auto';
                 }
             }
         }
+    }
+
+    executeCustom(event) {
+
+        switch (event.custom) {
+
+            case 'hover':
+                this._eventCount.hover++;
+                break;
+        }
+
+        return this;
     }
 };
 
