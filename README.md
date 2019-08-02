@@ -139,6 +139,8 @@ c.animate((_c, step, second) => {
 
 ### Experimental event handler
 
+Supported shapes are `circle`, `imagePointer` & `rectangle`.
+
 ```javascript 1.8
 let c = new Canvas();
 
@@ -146,13 +148,16 @@ document.querySelector('body').innerHTML = c.getHtml();
 
  c.draw()
      .begin()
-     .color('#000000')
-     .rectangle(210, 10, 40, 40)
+     .color('#00ff00')
+     .circle(30, 770, 20)
+     .fill()
      .close()
-     .on('click', (obj, type) => {
-
-        console.log(obj, type);
-
-         alert('blue birds');
+     .hover('pointer', () => {
+    
+         console.log('hover circle');
+     })
+     .on('click', () => {
+    
+         console.log('circle');
      });
 ```
