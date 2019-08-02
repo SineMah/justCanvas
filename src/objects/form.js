@@ -59,7 +59,7 @@ var form = class Form {
 
 	inShape() {
 
-		return true;
+		return false;
 	}
 };
 
