@@ -4,7 +4,7 @@ var event = class Event {
 
     constructor(id, name, callback) {
 
-        this.id = id;
+        this.id = `${id}-${name}`;
         this.name = name;
         this.canvas = null;
         this.shape = null;
