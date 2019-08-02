@@ -9,9 +9,13 @@ var eventStore = class EventStore {
         this._events = {};
         this._dom = new Dom();
 
+        // global count for cursor
         this._eventCount = {
             hover: 0
         };
+
+        // global hover
+        this._eventSingle = {};
 
         this._eventNames = [
             'click',
@@ -24,6 +28,11 @@ var eventStore = class EventStore {
          * var Event event
          */
         this._events[event.id] = event;
+
+        if(event.custom === 'hover') {
+
+            this._eventSingle[event.id] = false;
+        }
 
         return this;
     }
@@ -58,11 +67,13 @@ var eventStore = class EventStore {
                     left: (e.x || e.pageX) - pos.left
                 };
 
+                this.resetMove(e, event);
+
                 if(event.shape.inShape(e.elementPosition)) {
 
-                    this.executeCustom(event);
+                    this.executeCustom(e, event);
 
-                    if(typeof event.callback === 'function') {
+                    if(typeof event.callback === 'function' && !event.custom) {
 
                         event.callback(e, event);
                     }
@@ -80,13 +91,34 @@ var eventStore = class EventStore {
         }
     }
 
-    executeCustom(event) {
+    executeCustom(e, event) {
 
         switch (event.custom) {
 
             case 'hover':
                 this._eventCount.hover++;
                 break;
+        }
+
+        if(typeof this._eventSingle[event.id] === 'boolean'
+            && this._eventSingle[event.id] === false
+            && typeof event.callback === 'function') {
+
+            event.callback(e, event);
+
+            this._eventSingle[event.id] = true;
+        }
+
+        return this;
+    }
+
+    resetMove(e, event) {
+
+        if(typeof this._eventSingle[event.id] === 'boolean'
+            && this._eventSingle[event.id] === true
+            && !event.shape.inShape(e.elementPosition)) {
+
+            this._eventSingle[event.id] = false;
         }
 
         return this;
