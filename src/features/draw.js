@@ -58,8 +58,10 @@ var Draw = class Draw {
 
     current(value) {
 
-        if(typeof value === 'undefined')
+        if(typeof value === 'undefined') {
+
             return this._current;
+        }
 
         this._current = value;
 
@@ -79,10 +81,14 @@ var Draw = class Draw {
         e.shape = this._current;
         e.canvas = this._ctx.canvas.id;
 
-        /**
-         * var EventStore window.eventStore
-         */
-        window.eventStore.add(e);
+        if(!window.eventStore.exists(e)) {
+            // console.log(e);
+
+            /**
+             * var EventStore window.eventStore
+             */
+            window.eventStore.add(e);
+        }
 
         return this;
     }
@@ -138,6 +144,8 @@ var Draw = class Draw {
             .color(this.color())
             .draw();
 
+        line = this.addShape(line);
+
         this.current(line);
         this.add(line);
 
@@ -151,6 +159,8 @@ var Draw = class Draw {
             .coordinates(coordinates)
             .color(this.color())
             .draw();
+
+        bezier = this.addShape(bezier);
 
         this.current(bezier);
         this.add(bezier);
@@ -168,6 +178,8 @@ var Draw = class Draw {
             .height(height)
             .color(this.color())
             .draw();
+
+        rectangle = this.addShape(rectangle);
 
         this.current(rectangle);
         this.add(rectangle);
@@ -197,6 +209,8 @@ var Draw = class Draw {
             .color(this.color())
             .draw();
 
+        circle = this.addShape(circle);
+
         this.current(circle);
         this.add(circle);
 
@@ -224,8 +238,11 @@ var Draw = class Draw {
 
         image.draw(scale);
 
+        image = this.addShape(image);
+
         this.current(image);
         this.add(image);
+
 
         return this;
     }
@@ -237,8 +254,11 @@ var Draw = class Draw {
 
         image.draw(false, true);
 
+        image = this.addShape(image);
+
         this.current(image);
         this.add(image);
+
 
         return this;
     }
@@ -264,6 +284,24 @@ var Draw = class Draw {
     collection() {
 
         return this._collection;
+    }
+
+    addShape(shape) {
+
+        /**
+         * var ShapeStore window.shapeStore
+         */
+        let existingShape = window.shapeStore.exists(shape);
+
+        if(existingShape) {
+
+            shape._id = existingShape._id;
+        }else {
+
+            window.shapeStore.add(this._current);
+        }
+
+        return shape;
     }
 };
 

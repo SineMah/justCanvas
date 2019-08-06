@@ -25,7 +25,8 @@ var eventStore = class EventStore {
 
     add(event) {
 
-        if(!this._events[event.id]) {
+
+        if(!this.exists(event)) {
 
             /**
              * var Event event
@@ -36,10 +37,20 @@ var eventStore = class EventStore {
 
                 this._eventSingle[event.id] = false;
             }
-
         }
 
         return this;
+    }
+
+    exists(event) {
+        let found = false;
+
+        if(this._events[event.id]) {
+
+            found = true;
+        }
+
+        return found;
     }
 
     toggle() {
