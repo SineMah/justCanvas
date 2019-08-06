@@ -16,7 +16,6 @@ var shapeStore = class ShapeStore {
         this._shapes[shape._id] = shape;
         this._shapeProperties[this.serialize(shape)] = shape._id;
 
-        console.log(this.serialize(shape));
         // }
 
         return this;
