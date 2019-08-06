@@ -24,14 +24,19 @@ var eventStore = class EventStore {
     }
 
     add(event) {
-        /**
-         * var Event event
-         */
-        this._events[event.id] = event;
 
-        if(event.custom === 'hover') {
+        if(!this._events[event.id]) {
 
-            this._eventSingle[event.id] = false;
+            /**
+             * var Event event
+             */
+            this._events[event.id] = event;
+
+            if(event.custom === 'hover') {
+
+                this._eventSingle[event.id] = false;
+            }
+
         }
 
         return this;
