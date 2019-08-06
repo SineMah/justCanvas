@@ -15,6 +15,8 @@ var shapeStore = class ShapeStore {
 
         this._shapes[shape._id] = shape;
         this._shapeProperties[this.serialize(shape)] = shape._id;
+
+        console.log(this.serialize(shape));
         // }
 
         return this;
@@ -50,7 +52,7 @@ var shapeStore = class ShapeStore {
             y = shape._offset[1];
         }
 
-        return `id-x:${x}-y:${y}-r:${r}-c${color}-i:${i}`;
+        return `id-x:${Number(x).toFixed(2)}-y:${Number(y).toFixed(2)}-r:${r}-c${color}-i:${i}`;
     }
 };
 

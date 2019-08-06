@@ -4,34 +4,34 @@ import String from '../helpers/string.js';
 
 var form = class Form {
 
-	constructor(ctx) {
+    constructor(ctx) {
 
-		this._ctx = ctx;
-		this._id = String.getId();
-		this._color = '#000000';
-	}
+        this._ctx = ctx;
+        this._id = String.getId();
+        this._color = '#000000';
+    }
 
-	ctx(value) {
+    ctx(value) {
 
-		if(typeof value === 'undefined')
-			return this._ctx;
+        if(typeof value === 'undefined')
+            return this._ctx;
 
-		this._ctx = value;
+        this._ctx = value;
 
-		return this;
-	}
+        return this;
+    }
 
-	id(value) {
+    id(value) {
 
-		if(typeof value === 'undefined')
-			return this._id;
+        if(typeof value === 'undefined')
+            return this._id;
 
-		this._id = value;
+        this._id = value;
 
-		return this;
-	}
+        return this;
+    }
 
-	color(value) {
+    color(value) {
 
         if(typeof value === 'undefined')
             return this._color;
@@ -57,10 +57,33 @@ var form = class Form {
         return this;
     }
 
-	inShape() {
+    inShape() {
 
-		return false;
-	}
+        return false;
+    }
+
+    setId() {
+
+        this._id = this.serialize();
+
+        return this;
+    }
+
+    serialize() {
+        let color = this._color || 'null',
+            x = this._x || 'null',
+            y = this._y || 'null',
+            r = this._r || 'null',
+            i = typeof this._image === 'undefined' ? '0' : '1';
+
+        if(typeof this._offset !== 'undefined') {
+
+            x = this._offset[0];
+            y = this._offset[1];
+        }
+
+        return `id-x:${Number(x).toFixed(2)}-y:${Number(y).toFixed(2)}-r:${r}-c${color}-i:${i}`;
+    }
 };
 
 export default form;

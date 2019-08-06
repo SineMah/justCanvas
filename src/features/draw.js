@@ -142,6 +142,7 @@ var Draw = class Draw {
         line
             .coordinates(coordinates)
             .color(this.color())
+            .setId()
             .draw();
 
         line = this.addShape(line);
@@ -158,6 +159,7 @@ var Draw = class Draw {
         bezier
             .coordinates(coordinates)
             .color(this.color())
+            .setId()
             .draw();
 
         bezier = this.addShape(bezier);
@@ -177,6 +179,7 @@ var Draw = class Draw {
             .width(width)
             .height(height)
             .color(this.color())
+            .setId()
             .draw();
 
         rectangle = this.addShape(rectangle);
@@ -207,6 +210,7 @@ var Draw = class Draw {
             .end(endAngle)
             .direction(direction)
             .color(this.color())
+            .setId()
             .draw();
 
         circle = this.addShape(circle);
@@ -236,6 +240,8 @@ var Draw = class Draw {
 
         let image = new Pic(this.ctx(), img, x, y);
 
+        image.setId();
+
         image.draw(scale);
 
         image = this.addShape(image);
@@ -251,6 +257,8 @@ var Draw = class Draw {
         let image = new Pic(this.ctx(), img);
 
         image.offset(x, y);
+
+        image.setId();
 
         image.draw(false, true);
 
@@ -272,6 +280,8 @@ var Draw = class Draw {
             y = 0;
 
         let image = new Pic(this.ctx(), img);
+
+        image.setId();
 
         image.drawZoom(zoomFactor, x, y);
 
