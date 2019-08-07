@@ -139,6 +139,13 @@ var eventStore = class EventStore {
 
         return this;
     }
+
+    flush() {
+
+        this._events = {};
+
+        return this;
+    }
 };
 
 export default eventStore;
