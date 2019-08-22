@@ -53,6 +53,14 @@ var shapeStore = class ShapeStore {
 
         return `id-x:${Number(x).toFixed(2)}-y:${Number(y).toFixed(2)}-r:${r}-c${color}-i:${i}`;
     }
+
+    flush() {
+
+        window.shapeStore._shapes = {};
+        window.shapeStore._shapeProperties = {};
+
+        return this;
+    }
 };
 
 export default shapeStore;

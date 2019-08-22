@@ -142,7 +142,8 @@ var eventStore = class EventStore {
 
     flush() {
 
-        this._events = {};
+        window.eventStore._events = {};
+        window.eventStore._eventSingle = {};
 
         return this;
     }

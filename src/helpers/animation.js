@@ -4,7 +4,10 @@ var animation = class Animation {
 
     animate() {
         let _this = window.justCanvas;
-        
+
+        window.eventStore.flush();
+        window.shapeStore.flush();
+
         window.justCanvasHandle = requestAnimationFrame(window.justCanvasAnimate);
 
         _this.draw().ctx().clearRect(0, 0, _this._width, _this._height);
@@ -14,6 +17,8 @@ var animation = class Animation {
         window.justCanvasStep++;
 
         if(window.justCanvasStep % 60 === 0) window.justCanvasFrameSecond++;
+
+        return this;
     }
 
     stop() {
@@ -27,6 +32,8 @@ var animation = class Animation {
 
         window.justCanvasStep = 0;
         window.justCanvasFrameSecond = 0;
+
+        return this;
     }
 
     setup(canvas, callback) {
