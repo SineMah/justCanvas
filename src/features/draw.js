@@ -1,109 +1,318 @@
 'use strict';
 
-import Form from '../objects/form.js';
+import Line from '../objects/line.js';
+import Bezier from '../objects/bezier.js';
+import Circle from '../objects/circle.js';
+import Rectangle from '../objects/rectangle.js';
+import Pic from '../objects/pic.js';
 
-var text = class Text extends Form {
+import Event from "../helpers/event.js";
 
-    constructor(ctx, text) {
+var Draw = class Draw {
 
-        super(ctx);
+    constructor(id) {
 
-        this._x = 0;
-        this._y = 0;
-        this._text = text;
+        this._canvas = null;
+        this._ctx = null;
+        this._color = '#000000';
 
-        this._font = 'Arial';
-        this._size = '30px';
+        this.canvas(id);
+        this.ctx(true);
 
-        this._width = 0;
-        this._height = 0;
-
+        this._current = null;
+        this._collection = {};
     }
 
-    coordinates(x, y) {
+    canvas(id) {
 
-        this
+        if(typeof id === 'undefined')
+            return this._canvas;
+
+        this._canvas = document.getElementById(id);
+        this._ctx = this._canvas.getContext('2d');
+
+        return this;
+    }
+
+    color(value) {
+
+        if(typeof value === 'undefined')
+            return this._color;
+
+        this._color = value;
+
+        return this;
+    }
+
+    ctx() {
+
+        return this._ctx;
+    }
+
+    begin()  {
+
+        this.ctx().beginPath();
+
+        return this;
+    }
+
+    current(value) {
+
+        if(typeof value === 'undefined') {
+
+            return this._current;
+        }
+
+        this._current = value;
+
+        return this;
+    }
+
+    close() {
+
+        this.ctx().closePath();
+
+        return this;
+    }
+
+    on(eventName, callback) {
+        let e = new Event(this._current._id, eventName, callback);
+
+        e.shape = this._current;
+        e.canvas = this._ctx.canvas.id;
+
+        if(!window.eventStore.exists(e)) {
+            // console.log(e);
+
+            /**
+             * var EventStore window.eventStore
+             */
+            window.eventStore.add(e);
+        }
+
+        return this;
+    }
+
+    hover(cursor, callback) {
+        let e = new Event(this._current._id, 'mousemove', callback);
+
+        e.shape = this._current;
+        e.canvas = this._ctx.canvas.id;
+        e.custom = 'hover';
+
+        if(typeof cursor === 'undefined') {
+
+            cursor = 'pointer';
+        }
+
+        e.cursor = cursor;
+
+        /**
+         * var EventStore window.eventStore
+         */
+        window.eventStore.add(e);
+
+        return this;
+    }
+
+    fill() {
+
+        this.current().fill();
+
+        return this;
+    }
+
+    stroke() {
+
+        this.current().stroke();
+
+        return this;
+    }
+
+    add(formObject) {
+
+        this._collection[formObject.id()] = formObject;
+
+        return this;
+    }
+
+    line(coordinates) {
+        let line = new Line(this.ctx());
+
+        line
+            .coordinates(coordinates)
+            .color(this.color())
+            .setId()
+            .draw();
+
+        line = this.addShape(line);
+
+        this.current(line);
+        this.add(line);
+
+        return this;
+    }
+
+    bezier(coordinates) {
+        let bezier = new Bezier(this.ctx());
+
+        bezier
+            .coordinates(coordinates)
+            .color(this.color())
+            .setId()
+            .draw();
+
+        bezier = this.addShape(bezier);
+
+        this.current(bezier);
+        this.add(bezier);
+
+        return this;
+    }
+
+    rectangle(startX, startY, width, height) {
+        let rectangle = new Rectangle(this.ctx());
+
+        rectangle
+            .x(startX)
+            .y(startY)
+            .width(width)
+            .height(height)
+            .color(this.color())
+            .setId()
+            .draw();
+
+        rectangle = this.addShape(rectangle);
+
+        this.current(rectangle);
+        this.add(rectangle);
+
+        return this;
+    }
+
+    circle(x, y, r, startAngle, endAngle, direction) {
+        let circle = new Circle(this.ctx());
+
+        if(typeof startAngle === 'undefined')
+            startAngle = 0;
+
+        if(typeof endAngle === 'undefined')
+            endAngle = 360;
+
+        if(typeof direction === 'undefined')
+            direction = false;
+
+        circle
             .x(x)
-            .y(y);
+            .y(y)
+            .r(r)
+            .start(startAngle)
+            .end(endAngle)
+            .direction(direction)
+            .color(this.color())
+            .setId()
+            .draw();
+
+        circle = this.addShape(circle);
+
+        this.current(circle);
+        this.add(circle);
 
         return this;
     }
 
-    size(value) {
+    image(img, scale, x, y) {
 
-        if(typeof value === 'undefined')
-            return this._size;
+        if(typeof x === 'undefined') {
 
-        this._size = `${value}px`;
+            x = 0;
+        }
 
-        return this;
-    }
+        if(typeof y === 'undefined') {
 
-    font(value) {
+            y = 0;
+        }
 
-        if(typeof value === 'undefined')
-            return this._font;
+        if(typeof scale === 'undefined') {
 
-        this._font = value;
+            scale = true;
+        }
 
-        return this;
-    }
+        let image = new Pic(this.ctx(), img, x, y);
 
-    width(value) {
+        image.setId();
 
-        if(typeof value === 'undefined')
-            return this._width;
+        image.draw(scale);
 
-        this._width = value;
+        image = this.addShape(image);
 
-        return this;
-    }
+        this.current(image);
+        this.add(image);
 
-    height(value) {
-
-        if(typeof value === 'undefined')
-            return this._height;
-
-        this._height = value;
 
         return this;
     }
 
-    x(value) {
+    imagePointer(img, x, y) {
+        let image = new Pic(this.ctx(), img);
 
-        if(typeof value === 'undefined')
-            return this._x;
+        image.offset(x, y);
 
-        this._x = value;
+        image.setId();
 
-        return this;
-    }
+        image.draw(false, true);
 
-    y(value) {
+        image = this.addShape(image);
 
-        if(typeof value === 'undefined')
-            return this._y;
+        this.current(image);
+        this.add(image);
 
-        this._y = value;
 
         return this;
     }
 
-    draw() {
+    imageZoom(img, zoomFactor, x, y) {
 
-        this.ctx().fillStyle = this.color();
-        this.ctx().font = `${this.size()} ${this.font()}`;
+        if(typeof x === 'undefined')
+            x = 0;
 
-        this.ctx().fillText(this._text, this.x(), this.y());
+        if(typeof y === 'undefined')
+            y = 0;
+
+        let image = new Pic(this.ctx(), img);
+
+        image.setId();
+
+        image.drawZoom(zoomFactor, x, y);
+
+        this.current(image);
+        this.add(image);
 
         return this;
     }
 
-    inShape(position) {
-        let inShape = false;
+    collection() {
 
-        return inShape;
+        return this._collection;
+    }
+
+    addShape(shape) {
+
+        /**
+         * var ShapeStore window.shapeStore
+         */
+        let existingShape = window.shapeStore.exists(shape);
+
+        if(existingShape) {
+
+            shape._id = existingShape._id;
+        }else {
+
+            window.shapeStore.add(this._current);
+        }
+
+        return shape;
     }
 };
 
-export default text;
+export default Draw;
