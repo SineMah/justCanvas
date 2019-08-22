@@ -41,6 +41,7 @@ var animation = class Animation {
         window.justCanvasStep = 0; // default are 60 frames per second
         window.justCanvasFrameSecond = 0;
         window.justCanvas = canvas;
+        window.justCanvasDraw = canvas.draw;
         window.justCanvasAnimate = this.animate;
         window.justCanvasCallback = callback;
 

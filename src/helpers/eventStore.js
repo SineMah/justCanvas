@@ -11,8 +11,11 @@ var eventStore = class EventStore {
 
         // global count for cursor
         this._eventCount = {
-            hover: 0
+            hover: 0,
+            wasHover: 99
         };
+
+        this._lastEvent = null;
 
         // global hover
         this._eventSingle = {};
@@ -87,19 +90,37 @@ var eventStore = class EventStore {
 
                 if(event.shape.inShape(e.elementPosition)) {
 
+                    this._eventCount.wasHover = 0;
+
                     this.executeCustom(e, event);
 
                     if(typeof event.callback === 'function' && !event.custom) {
 
                         event.callback(e, event);
                     }
+                }else {
+
+                    this._eventCount.wasHover++;
+
                 }
 
                 if(this._eventCount.hover > 0) {
                     let cursor = event.cursor || 'auto';
 
+                    this._lastEvent = event;
+
                     document.querySelector(`#${event.canvas}`).style.cursor = cursor;
                 }else {
+
+                    this._eventCount.wasHover++;
+
+                    if(this._eventCount.wasHover <= 2) {
+                        let e = new CustomEvent('jC-mouseLeave', {
+                            origEvent: this._lastEvent
+                        });
+
+                        document.querySelector(`#${event.canvas}`).dispatchEvent(e);
+                    }
 
                     document.querySelector(`#${event.canvas}`).style.cursor = 'auto';
                 }
