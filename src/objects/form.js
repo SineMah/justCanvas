@@ -82,7 +82,7 @@ var form = class Form {
             y = this._offset[1];
         }
 
-        return `id-x:${Number(x).toFixed(2)}-y:${Number(y).toFixed(2)}-r:${r}-c${color}-i:${i}`;
+        return `id-${this._ctx.canvas.id}-x:${Number(x).toFixed(2)}-y:${Number(y).toFixed(2)}-r:${r}-c${color}-i:${i}`;
     }
 };
 
