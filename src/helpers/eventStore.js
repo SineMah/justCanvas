@@ -12,8 +12,10 @@ var eventStore = class EventStore {
         // global count for cursor
         this._eventCount = {
             hover: 0,
-            wasHover: 99
+            wasHover: 0
         };
+
+        this._eventTriggered = {};
 
         this._lastEvent = null;
 
@@ -67,7 +69,7 @@ var eventStore = class EventStore {
     }
 
     find(e) {
-
+        let inShapes = [];
         this._eventCount.hover = 0;
 
         for(let eId in this._events) {
@@ -91,6 +93,8 @@ var eventStore = class EventStore {
                 if(event.shape.inShape(e.elementPosition)) {
 
                     this._eventCount.wasHover = 0;
+
+                    inShapes.push(event);
 
                     this.executeCustom(e, event);
 
@@ -122,6 +126,20 @@ var eventStore = class EventStore {
                 }
             }
         }
+
+        if(inShapes.length === 0) {
+            let e = new CustomEvent('jC-mouseLeave', {
+                origEvent: this._lastEvent
+            });
+
+            for(let key in window.eventStore._eventTriggered) {
+                let triggered = window.eventStore._eventTriggered[key];
+
+                document.querySelector(`#${triggered.canvas}`).dispatchEvent(e);
+            }
+
+            window.eventStore._eventTriggered = {};
+        }
     }
 
     executeCustom(e, event) {
@@ -130,7 +148,7 @@ var eventStore = class EventStore {
 
             case 'hover':
                 this._eventCount.hover++;
-                this._eventCount.wasHover++;
+                this.setTriggered(event);
                 break;
         }
 
@@ -158,10 +176,30 @@ var eventStore = class EventStore {
         return this;
     }
 
+    setTriggered(event) {
+
+        window.eventStore._eventTriggered[event.id] = event;
+
+        return this;
+    }
+
+    isTriggered(eventId) {
+
+        return eventId  in window.eventStore._eventTriggered;
+    }
+
+    removeTriggered(eventId) {
+
+        delete(window.eventStore._eventTriggered[eventId]);
+
+        return this;
+    }
+
     flush() {
 
         window.eventStore._events = {};
         window.eventStore._eventSingle = {};
+        window.eventStore._eventTriggered = {};
 
         return this;
     }
