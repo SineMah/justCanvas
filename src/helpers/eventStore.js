@@ -98,10 +98,6 @@ var eventStore = class EventStore {
 
                         event.callback(e, event);
                     }
-                }else {
-
-                    this._eventCount.wasHover++;
-
                 }
 
                 if(this._eventCount.hover > 0) {
@@ -112,12 +108,12 @@ var eventStore = class EventStore {
                     document.querySelector(`#${event.canvas}`).style.cursor = cursor;
                 }else {
 
-                    this._eventCount.wasHover++;
-
-                    if(this._eventCount.wasHover <= 2) {
+                    if(this._eventCount.wasHover > 0) {
                         let e = new CustomEvent('jC-mouseLeave', {
                             origEvent: this._lastEvent
                         });
+
+                        this._eventCount.wasHover = 0;
 
                         document.querySelector(`#${event.canvas}`).dispatchEvent(e);
                     }
@@ -134,6 +130,7 @@ var eventStore = class EventStore {
 
             case 'hover':
                 this._eventCount.hover++;
+                this._eventCount.wasHover++;
                 break;
         }
 
