@@ -88,9 +88,11 @@ var eventStore = class EventStore {
                     left: (e.x || e.pageX) - pos.left
                 };
 
-                this.resetMove(e, event);
+                let isInShape = event.shape.inShape(e.elementPosition);
 
-                if(event.shape.inShape(e.elementPosition, '93')) {
+                this.resetMove(e, event, isInShape);
+
+                if(isInShape) {
 
                     this._eventCount.wasHover = 0;
 
@@ -164,11 +166,11 @@ var eventStore = class EventStore {
         return this;
     }
 
-    resetMove(e, event) {
+    resetMove(e, event, isInShape) {
 
         if(typeof this._eventSingle[event.id] === 'boolean'
             && this._eventSingle[event.id] === true
-            && !event.shape.inShape(e.elementPosition)) {
+            && !isInShape) {
 
             this._eventSingle[event.id] = false;
         }
@@ -196,6 +198,8 @@ var eventStore = class EventStore {
     }
 
     flush() {
+
+        // todo flush just events from current canvas
 
         window.eventStore._events = {};
         window.eventStore._eventSingle = {};
