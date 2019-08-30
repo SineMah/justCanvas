@@ -72,8 +72,8 @@ var eventStore = class EventStore {
         let inShapes = [];
         this._eventCount.hover = 0;
 
-        for(let eId in this._events) {
-            let event = this._events[eId];
+        for(let eId in window.eventStore._events) {
+            let event = window.eventStore._events[eId];
 
             if(event.canvas === e.target.id && event.name === e.type) {
                 let pos = this._dom.getPosition(e.target);
@@ -90,7 +90,7 @@ var eventStore = class EventStore {
 
                 this.resetMove(e, event);
 
-                if(event.shape.inShape(e.elementPosition)) {
+                if(event.shape.inShape(e.elementPosition, '93')) {
 
                     this._eventCount.wasHover = 0;
 
