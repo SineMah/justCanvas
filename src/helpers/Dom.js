@@ -18,6 +18,15 @@ var Dom = class Dom {
             left: Math.round(left)
         };
     }
+
+    getMousePosition(canvas, evt) {
+        let rect = canvas.getBoundingClientRect();
+
+        return {
+            left: evt.clientX - rect.left,
+            top: evt.clientY - rect.top
+        };
+    }
 };
 
 export default Dom;
