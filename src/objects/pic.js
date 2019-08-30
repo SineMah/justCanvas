@@ -86,6 +86,29 @@ var pic = class Pic extends Form {
         this._height = this._image.height;
         this._width = this._image.width;
 
+        if(window.jCDebug) {
+
+            this.ctx().beginPath();
+            this.ctx().arc(position[0], position[1], 5, 0, 2 * Math.PI);
+            this.ctx().fillStyle = 'red';
+            this.ctx().fill();
+
+            this.ctx().beginPath();
+            this.ctx().arc(position[0] + this._width, position[1] + this._height, 5, 0, 2 * Math.PI);
+            this.ctx().fillStyle = 'red';
+            this.ctx().fill();
+
+            this.ctx().beginPath();
+            this.ctx().arc(0, 0, 20, 0, 2 * Math.PI);
+            this.ctx().fillStyle = 'lightblue';
+            this.ctx().fill();
+
+            this.ctx().beginPath();
+            this.ctx().arc(750, 500, 20, 0, 2 * Math.PI);
+            this.ctx().fillStyle = 'lightblue';
+            this.ctx().fill();
+        }
+
         return this;
     }
 
@@ -106,12 +129,39 @@ var pic = class Pic extends Form {
     inShape(position) {
         let x = this._position[0],
             y = this._position[1],
+            canvas = document.getElementById(this.ctx().canvas.id),
+            _x  = this._ctx.canvas.width/canvas.clientWidth,
+            _y  = this._ctx.canvas.height/canvas.clientHeight,
             inShape = false;
+
+        position.left = _x * position.left;
+        position.top = _y * position.top;
 
         if(position.top >= y && position.top <= y + this._height &&
             position.left >= x && position.left <= x + this._width) {
 
             inShape = true
+        }
+
+        if(window.jCDebug) {
+
+            this.ctx().beginPath();
+            this.ctx().arc(position.left, position.top, 2, 0, 2 * Math.PI);
+            this.ctx().fillStyle = 'lightgreen';
+            this.ctx().fill();
+            this.ctx().closePath();
+
+            this.ctx().beginPath();
+            this.ctx().fillStyle = 'white';
+            this.ctx().fillRect(0, 0, 200, 45);
+            this.ctx().fill();
+            this.ctx().closePath();
+
+            this.ctx().beginPath();
+            this.ctx().fillStyle = 'lightgreen';
+            this.ctx().font = "30px Arial";
+            this.ctx().fillText(`x: ${Number(position.left).toFixed()}, y: ${Number(position.top).toFixed()}`, 5, 35);
+            this.ctx().closePath();
         }
 
         return inShape;
