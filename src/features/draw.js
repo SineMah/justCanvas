@@ -283,6 +283,17 @@ var Draw = class Draw {
 
         let image = new Pic(this.ctx(), img);
 
+        if(zoomFactor > 1) {
+            let transpose =  2 - (1/zoomFactor),
+                _x = transpose*this._ctx.canvas.width,
+                _y = transpose*this._ctx.canvas.height;
+
+            window.animationStore.add(this._ctx.canvas.id);
+
+            x = _x/2;
+            y = _y/2;
+        }
+
         image.setId();
 
         image.drawZoom(zoomFactor, x, y);
