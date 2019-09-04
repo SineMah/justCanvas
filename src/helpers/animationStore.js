@@ -15,6 +15,11 @@ var animationStore = class AnimationStore {
         return this;
     }
 
+    active(id) {
+
+        return window._animationStore[id] === true;
+    }
+
     exists(id) {
         let found = false;
 
