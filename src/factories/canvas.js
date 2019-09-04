@@ -5,6 +5,7 @@ import Draw from '../features/draw.js';
 import Animation from '../helpers/animation.js';
 import EventStore from '../helpers/eventStore.js';
 import ShapeStore from '../helpers/shapeStore.js';
+import AnimationStore from '../helpers/animationStore.js';
 
 var Canvas = class Canvas {
 
@@ -26,6 +27,11 @@ var Canvas = class Canvas {
         if(typeof window.shapeStore !== 'object') {
 
             window.shapeStore = new ShapeStore();
+        }
+        // initialize animationStore
+        if(typeof window.animationStore !== 'object') {
+
+            window.animationStore = new AnimationStore();
         }
 
         window.eventStore.toggle();

@@ -22,6 +22,9 @@ var animation = class Animation {
     }
 
     stop() {
+        let _this = window.justCanvas;
+
+        window.animationStore.delete(_this._id);
 
         cancelAnimationFrame(window.justCanvasHandle);
 
