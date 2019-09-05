@@ -22,6 +22,8 @@ var Draw = class Draw {
 
         this._current = null;
         this._collection = {};
+
+        this._center = [0, 0];
     }
 
     canvas(id) {
@@ -284,14 +286,13 @@ var Draw = class Draw {
         let image = new Pic(this.ctx(), img);
 
         if(zoomFactor > 1) {
-            let transpose =  2 - (1/zoomFactor),
-                _x = transpose*this._ctx.canvas.width,
-                _y = transpose*this._ctx.canvas.height;
+            let factor = 1/zoomFactor,
+                _factor = 1 - factor,
+                _x = _factor*img.width/2,
+                _y =_factor*img.height/2;
 
-            window.animationStore.add(this._ctx.canvas.id);
-
-            x = _x/2;
-            y = _y/2;
+            x =  _x - x;
+            y =  _y - y;
         }
 
         image.setId();

@@ -9,7 +9,6 @@ var animationStore = class AnimationStore {
 
     add(id) {
 
-
         window._animationStore[id] = true;
 
         return this;
