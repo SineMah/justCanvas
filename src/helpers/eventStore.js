@@ -137,7 +137,10 @@ var eventStore = class EventStore {
             for(let key in window.eventStore._eventTriggered) {
                 let triggered = window.eventStore._eventTriggered[key];
 
-                document.querySelector(`#${triggered.canvas}`).dispatchEvent(e);
+                if(triggered) {
+
+                    document.querySelector(`#${triggered.canvas}`).dispatchEvent(e);
+                }
             }
 
             window.eventStore._eventTriggered = {};
