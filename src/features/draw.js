@@ -23,7 +23,7 @@ var Draw = class Draw {
         this._current = null;
         this._collection = {};
 
-        this._center = [0, 0];
+        this._center = {x: null, y: null};
     }
 
     canvas(id) {
@@ -287,12 +287,13 @@ var Draw = class Draw {
 
         if(zoomFactor > 1) {
             let factor = 1/zoomFactor,
-                _factor = 1 - factor,
-                _x = _factor*img.width/2,
-                _y =_factor*img.height/2;
+                _factor = 1 - factor;
 
-            x =  _x - x;
-            y =  _y - y;
+            this._center.x = _factor*img.width/2;
+            this._center.y = _factor*img.height/2;
+
+            x =  this._center.x - x;
+            y =  this._center.x - y;
         }
 
         image.setId();
