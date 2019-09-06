@@ -286,11 +286,15 @@ var Draw = class Draw {
 
     imageZoom(img, zoomFactor, x, y) {
 
-        if(typeof x === 'undefined')
-            x = 0;
+        if(typeof x === 'undefined') {
 
-        if(typeof y === 'undefined')
+            x = 0;
+        }
+
+        if(typeof y === 'undefined') {
+
             y = 0;
+        }
 
         let image = new Pic(this.ctx(), img),
             factor = 1/zoomFactor,
