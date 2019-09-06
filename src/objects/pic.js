@@ -113,9 +113,7 @@ var pic = class Pic extends Form {
     }
 
     drawZoom(zoomFactor, x, y) {
-        let factor = 1 / zoomFactor,
-            _factor = (1 - factor);
-
+        let factor = 1 / zoomFactor;
 
         this.ctx().drawImage(
             this.image(),
