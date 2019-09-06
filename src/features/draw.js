@@ -312,9 +312,6 @@ var Draw = class Draw {
             x = this._center.x - x;
             y = this._center.y - y;
 
-            this._cache.x = x;
-            this._cache.y = y;
-
             this._cache.push({
                 x: x,
                 y: y
