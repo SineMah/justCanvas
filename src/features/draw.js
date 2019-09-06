@@ -24,6 +24,8 @@ var Draw = class Draw {
         this._collection = {};
 
         this._center = {x: null, y: null};
+        this._cache = [];
+        this._currentZoomFactor = 1;
     }
 
     canvas(id) {
@@ -33,6 +35,13 @@ var Draw = class Draw {
 
         this._canvas = document.getElementById(id);
         this._ctx = this._canvas.getContext('2d');
+
+        return this;
+    }
+
+    center() {
+
+        this._center = this._cache[this._cache.length - 1];
 
         return this;
     }
@@ -283,17 +292,33 @@ var Draw = class Draw {
         if(typeof y === 'undefined')
             y = 0;
 
-        let image = new Pic(this.ctx(), img);
+        let image = new Pic(this.ctx(), img),
+            factor = 1/zoomFactor,
+            _factor = 1 - factor;
 
         if(zoomFactor > 1) {
-            let factor = 1/zoomFactor,
-                _factor = 1 - factor;
 
-            this._center.x = _factor*img.width/2;
-            this._center.y = _factor*img.height/2;
+            if(this._center.x === null || this._center.y === null) {
 
-            x =  this._center.x - x;
-            y =  this._center.x - y;
+                this._center.x = _factor*img.width/2;
+                this._center.y = _factor*img.height/2;
+
+            }else {
+
+                this._center.x = _factor*this._center.x/this._currentZoomFactor;
+                this._center.y = _factor*this._center.y/this._currentZoomFactor;
+            }
+
+            x = this._center.x - x;
+            y = this._center.y - y;
+
+            this._cache.x = x;
+            this._cache.y = y;
+
+            this._cache.push({
+                x: x,
+                y: y
+            });
         }
 
         image.setId();
@@ -302,6 +327,11 @@ var Draw = class Draw {
 
         this.current(image);
         this.add(image);
+
+        if(_factor !== 0) {
+
+            this._currentZoomFactor = _factor;
+        }
 
         return this;
     }
