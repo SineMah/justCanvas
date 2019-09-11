@@ -25,6 +25,17 @@ var eventQueue = class EventQueue {
 
         return this._queue.shift();
     }
+
+    send() {
+        let event = this.current();
+
+        if(event) {
+
+            event.send(this);
+        }
+
+        return this;
+    }
 };
 
 export default eventQueue;
