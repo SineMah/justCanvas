@@ -6,6 +6,7 @@ import Animation from '../helpers/animation.js';
 import EventStore from '../helpers/eventStore.js';
 import ShapeStore from '../helpers/shapeStore.js';
 import AnimationStore from '../helpers/animationStore.js';
+import EventQueue from '../features/eventQueue.js';
 
 var Canvas = class Canvas {
 
@@ -17,6 +18,8 @@ var Canvas = class Canvas {
         this._height = 300;
         this._style = null;
         this._draw = null;
+
+        this._events = null;
 
         // initialize eventStore
         if(typeof window.eventStore !== 'object') {
@@ -147,6 +150,16 @@ var Canvas = class Canvas {
     collection () {
 
         return this.draw().collection();
+    }
+
+    events() {
+
+        if(!this._events) {
+
+            this._events = new EventQueue();
+        }
+
+        return this._events;
     }
 };
 
