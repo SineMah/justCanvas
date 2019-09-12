@@ -297,20 +297,19 @@ var Draw = class Draw {
         }
 
         let image = new Pic(this.ctx(), img),
-            factor = 1/zoomFactor,
-            _factor = 1 - factor;
+            factor = zoomFactor.getTranspose();
 
-        if(zoomFactor > 1) {
+        if(zoomFactor.zoomFactor(true) > 1) {
 
             if(this._center.x === null || this._center.y === null) {
 
-                this._center.x = _factor*img.width/2;
-                this._center.y = _factor*img.height/2;
+                this._center.x = factor*img.width/2;
+                this._center.y = factor*img.height/2;
 
             }else {
 
-                this._center.x = _factor*this._center.x/this._currentZoomFactor;
-                this._center.y = _factor*this._center.y/this._currentZoomFactor;
+                this._center.x = factor*this._center.x/this._currentZoomFactor;
+                this._center.y = factor*this._center.y/this._currentZoomFactor;
             }
 
             x = this._center.x - x;
@@ -329,9 +328,9 @@ var Draw = class Draw {
         this.current(image);
         this.add(image);
 
-        if(_factor !== 0) {
+        if(factor !== 0) {
 
-            this._currentZoomFactor = _factor;
+            this._currentZoomFactor = factor;
         }
 
         return this;
