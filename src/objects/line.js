@@ -4,12 +4,12 @@ import Form from '../objects/form.js';
 
 var line = class Line extends Form {
 
-	constructor(ctx) {
+    constructor(ctx) {
 
         super(ctx);
 
         this._coordinates = [];
-	}
+    }
 
     coordinates(coordinates) {
 
@@ -27,7 +27,7 @@ var line = class Line extends Form {
 
         this.ctx().moveTo(begin[0], begin[1]);
 
-        for(let i in coordinates) {
+        for (let i = 1; i < coordinates.length; i++) {
             let coordinate = coordinates[i],
                 x = coordinate[0],
                 y = coordinate[1];
