@@ -11,7 +11,7 @@ import Event from "../helpers/event.js";
 
 var Draw = class Draw {
 
-    constructor(id) {
+    constructor(id, ctx) {
 
         this._canvas = null;
         this._ctx = null;
@@ -26,6 +26,9 @@ var Draw = class Draw {
         this._center = {x: null, y: null};
         this._cache = [];
         this._currentZoomFactor = 1;
+
+        this._width = ctx._width;
+        this._height = ctx._height;
     }
 
     canvas(id) {
@@ -183,8 +186,8 @@ var Draw = class Draw {
         return this;
     }
 
-    rectangle(startX, startY, width, height) {
-        let rectangle = new Rectangle(this.ctx());
+    rectangle(startX, startY, width, height, overlay) {
+        let rectangle = new Rectangle(this.ctx(), overlay);
 
         rectangle
             .x(startX)
@@ -193,6 +196,7 @@ var Draw = class Draw {
             .height(height)
             .color(this.color())
             .setId()
+            .overlay()
             .draw();
 
         rectangle = this.addShape(rectangle);
@@ -203,8 +207,8 @@ var Draw = class Draw {
         return this;
     }
 
-    circle(x, y, r, startAngle, endAngle, direction) {
-        let circle = new Circle(this.ctx());
+    circle(x, y, r, startAngle, endAngle, direction, overlay) {
+        let circle = new Circle(this.ctx(), overlay);
 
         if(typeof startAngle === 'undefined')
             startAngle = 0;
@@ -224,7 +228,9 @@ var Draw = class Draw {
             .direction(direction)
             .color(this.color())
             .setId()
+            .overlay()
             .draw();
+
 
         circle = this.addShape(circle);
 
@@ -297,19 +303,20 @@ var Draw = class Draw {
         }
 
         let image = new Pic(this.ctx(), img),
-            factor = zoomFactor.getTranspose();
+            factor = zoomFactor.zoomFactor(true),
+            _factor = zoomFactor.getTranspose();
 
-        if(zoomFactor.zoomFactor(true) > 1) {
+        if(factor > 1) {
 
             if(this._center.x === null || this._center.y === null) {
 
-                this._center.x = factor*img.width/2;
-                this._center.y = factor*img.height/2;
+                this._center.x = _factor*img.width/2;
+                this._center.y = _factor*img.height/2;
 
             }else {
 
-                this._center.x = factor*this._center.x/this._currentZoomFactor;
-                this._center.y = factor*this._center.y/this._currentZoomFactor;
+                this._center.y = _factor*this._center.y/this._currentZoomFactor;
+                this._center.x = _factor*this._center.x/this._currentZoomFactor;
             }
 
             x = this._center.x - x;
@@ -328,9 +335,9 @@ var Draw = class Draw {
         this.current(image);
         this.add(image);
 
-        if(factor !== 0) {
+        if(_factor !== 0) {
 
-            this._currentZoomFactor = factor;
+            this._currentZoomFactor = _factor;
         }
 
         return this;
@@ -411,6 +418,27 @@ var Draw = class Draw {
             .close();
 
         this.text(charArray, x + padding.x, y + textConfig.size + 0*padding.y, textConfig.color, textConfig.size, textConfig.font);
+
+        return this;
+    }
+
+    overlay(color, x, y, radius) {
+        this
+            .begin()
+            .color(color)
+            .rectangle(
+                0,
+                0,
+                this._width,
+                this._height,
+                'destination'
+            );
+
+        this
+            .color('rgba(0, 0, 0, 1)')
+            .circle(x, y, radius, 0, 360, false, 'over')
+            .fill()
+            .close();
 
         return this;
     }

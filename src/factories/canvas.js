@@ -10,7 +10,7 @@ import EventQueue from '../features/eventQueue.js';
 
 var Canvas = class Canvas {
 
-    constructor() {
+    constructor(ctx) {
 
         this._id = `jC-${String.getId()}`;
         this._class = 'jC';
@@ -118,6 +118,9 @@ var Canvas = class Canvas {
             canvas.width = width;
         }
 
+        this._draw._width = this._width;
+        this._draw._height = this._height;
+
         return this;
     }
 
@@ -125,7 +128,7 @@ var Canvas = class Canvas {
 
         if(this._draw === null) {
 
-            this._draw = new Draw(this.id());
+            this._draw = new Draw(this.id(), this);
         }
 
         return this._draw;
