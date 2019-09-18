@@ -84,6 +84,21 @@ var form = class Form {
 
         return `id-${this._ctx.canvas.id}-x:${Number(x).toFixed(2)}-y:${Number(y).toFixed(2)}-r:${r}-c${color}-i:${i}`;
     }
+
+    overlayMode(mode) {
+        let composite = false;
+
+        switch (mode) {
+            case 'over':
+                composite = 'source-over';
+                break;
+            case 'destination':
+                composite = 'destination-out';
+                break;
+        }
+
+        return composite;
+    }
 };
 
 export default form;

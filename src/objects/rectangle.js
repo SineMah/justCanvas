@@ -4,7 +4,7 @@ import Form from '../objects/form.js';
 
 var rectangle = class Rectangle extends Form {
 
-    constructor(ctx) {
+    constructor(ctx, overlay) {
 
         super(ctx);
 
@@ -12,6 +12,8 @@ var rectangle = class Rectangle extends Form {
         this._y = 0;
         this._height = 0;
         this._width = 0;
+
+        this._overlay = overlay || false;
     }
 
     coordinates(startX, startY) {
@@ -69,6 +71,17 @@ var rectangle = class Rectangle extends Form {
         this.ctx().fillStyle = this.color();
 
         this.ctx().fillRect(this.x(), this.y(), this.width(), this.height());
+
+        return this;
+    }
+
+    overlay(mode) {
+        let operation = this.overlayMode(mode || this._overlay);
+
+        if(operation) {
+
+            this.ctx().globalCompositeOperation = operation;
+        }
 
         return this;
     }

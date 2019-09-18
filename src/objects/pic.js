@@ -90,12 +90,12 @@ var pic = class Pic extends Form {
 
             this.ctx().beginPath();
             this.ctx().arc(position[0], position[1], 5, 0, 2 * Math.PI);
-            this.ctx().fillStyle = 'red';
+            this.ctx().fillStyle = 'magenta';
             this.ctx().fill();
 
             this.ctx().beginPath();
             this.ctx().arc(position[0] + this._width, position[1] + this._height, 5, 0, 2 * Math.PI);
-            this.ctx().fillStyle = 'red';
+            this.ctx().fillStyle = 'magenta';
             this.ctx().fill();
 
             this.ctx().beginPath();
@@ -113,7 +113,12 @@ var pic = class Pic extends Form {
     }
 
     drawZoom(zoomFactor, x, y) {
-        let factor = zoomFactor.zoomFactor();
+        let factor = zoomFactor.getInterpolate();
+
+        if(factor === 0) {
+
+            factor = 1;
+        }
 
         this.ctx().drawImage(
             this.image(),
@@ -146,11 +151,11 @@ var pic = class Pic extends Form {
 
         if(window.jCDebug) {
 
-            this.ctx().beginPath();
-            this.ctx().arc(position.left, position.top, 2, 0, 2 * Math.PI);
-            this.ctx().fillStyle = 'lightgreen';
-            this.ctx().fill();
-            this.ctx().closePath();
+            // this.ctx().beginPath();
+            // this.ctx().arc(position.left, position.top, 2, 0, 2 * Math.PI);
+            // this.ctx().fillStyle = 'lightgreen';
+            // this.ctx().fill();
+            // this.ctx().closePath();
 
             this.ctx().beginPath();
             this.ctx().fillStyle = 'white';
