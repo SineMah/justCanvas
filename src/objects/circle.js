@@ -5,7 +5,7 @@ import Calc from '../helpers/calc.js';
 
 var circle = class Circle extends Form {
 
-    constructor(ctx) {
+    constructor(ctx, overlay) {
 
         super(ctx);
 
@@ -15,6 +15,8 @@ var circle = class Circle extends Form {
         this._start = 0;
         this._end = 360;
         this._direction = false;
+
+        this._overlay = overlay || false;
     }
 
     r(value) {
@@ -90,6 +92,17 @@ var circle = class Circle extends Form {
             Calc.degreesToRadians(this.end()),
             this.direction()
         );
+
+        return this;
+    }
+
+    overlay(mode) {
+        let operation = this.overlayMode(mode || this._overlay);
+
+        if(operation) {
+
+            this.ctx().globalCompositeOperation = operation;
+        }
 
         return this;
     }
