@@ -29,6 +29,8 @@ var Draw = class Draw {
 
         this._width = ctx._width;
         this._height = ctx._height;
+
+        this._overlay = document.createElement('canvas');
     }
 
     canvas(id) {
@@ -455,27 +457,42 @@ var Draw = class Draw {
         return this;
     }
 
-    overlay(color, x, y, radius) {
+    overlay(color, x, y, radius, zoom) {
+        let context = this._overlay.getContext('2d');
 
-        this
-            .color('rgba(255, 255, 255, 0.7)')
-            .rectangle(
-                0, 0,
-                this._width, this._height,
-                'source-over'
-            )
-            .fill();
+        context.clearRect(0, 0, this._overlay.width, this._overlay.height);
+        context.fillStyle = color;
+        context.fillRect(0, 0, this._overlay.width, this._overlay.height);
 
-        this
-            .color('rgba(255, 255, 255, 1)')
-            .circle(
-                x, y,
-                radius,
-                0, 360,
-                false,
-                'destination-out'
-            )
-            .fill();
+        context.beginPath();
+        context.fillStyle = "rgba(0, 0, 0, 1)";
+        context.globalCompositeOperation = 'destination-out';
+        context.arc(x, y, radius, 0, Math.PI*2);
+        context.fill();
+        context.globalCompositeOperation = 'source-over';
+
+        this.imageZoom(this._overlay, zoom);
+
+        //
+        // this
+        //     .color(color)
+        //     .rectangle(
+        //         0, 0,
+        //         this._width, this._height,
+        //         'source-over'
+        //     )
+        //     .fill();
+        //
+        // this
+        //     .color('rgba(255, 255, 255, 1)')
+        //     .circle(
+        //         x, y,
+        //         radius,
+        //         0, 360,
+        //         false,
+        //         'destination-out'
+        //     )
+        //     .fill();
 
         return this;
     }

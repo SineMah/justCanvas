@@ -111,11 +111,15 @@ var Canvas = class Canvas {
         if(typeof height !== 'undefined') {
             this.height(height);
             canvas.height = height;
+
+            this._draw._overlay.height = height;
         }
 
         if(typeof width !== 'undefined') {
             this.width(width);
             canvas.width = width;
+
+            this._draw._overlay.width = width;
         }
 
         this._draw._width = this._width;
