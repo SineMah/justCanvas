@@ -84,6 +84,8 @@ var circle = class Circle extends Form {
 
     draw() {
 
+        this.overlay();
+
         this.ctx().arc(
             this.x(),
             this.y(),
@@ -97,7 +99,8 @@ var circle = class Circle extends Form {
     }
 
     overlay(mode) {
-        let operation = this.overlayMode(mode || this._overlay);
+        // let operation = this.overlayMode(mode || this._overlay);
+        let operation = mode || this._overlay;
 
         if(operation) {
 

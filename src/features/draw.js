@@ -64,6 +64,13 @@ var Draw = class Draw {
         return this._ctx;
     }
 
+    setCtx(ctx) {
+
+        this._ctx = ctx;
+
+        return this;
+    }
+
     begin()  {
 
         this.ctx().beginPath();
@@ -196,11 +203,13 @@ var Draw = class Draw {
             .height(height)
             .color(this.color())
             .setId()
-            .overlay()
             .draw();
 
         rectangle = this.addShape(rectangle);
 
+        let ctx = rectangle.ctx();
+
+        this.setCtx(ctx);
         this.current(rectangle);
         this.add(rectangle);
 
@@ -228,11 +237,14 @@ var Draw = class Draw {
             .direction(direction)
             .color(this.color())
             .setId()
-            .overlay()
             .draw();
 
 
         circle = this.addShape(circle);
+
+        let ctx = circle.ctx();
+
+        this.setCtx(ctx);
 
         this.current(circle);
         this.add(circle);
@@ -265,6 +277,10 @@ var Draw = class Draw {
 
         image = this.addShape(image);
 
+        let ctx = image.ctx();
+
+        this.setCtx(ctx);
+
         this.current(image);
         this.add(image);
 
@@ -282,6 +298,10 @@ var Draw = class Draw {
         image.draw(false, true);
 
         image = this.addShape(image);
+
+        let ctx = image.ctx();
+
+        this.setCtx(ctx);
 
         this.current(image);
         this.add(image);
@@ -319,6 +339,11 @@ var Draw = class Draw {
                 this._center.x = _factor*this._center.x/this._currentZoomFactor;
             }
 
+            // console.log('draw');
+            // console.log(this._center);
+            // console.log(x, y);
+            // console.log('***');
+
             x = this._center.x - x;
             y = this._center.y - y;
 
@@ -331,6 +356,10 @@ var Draw = class Draw {
         image.setId();
 
         image.drawZoom(zoomFactor, x, y);
+
+        let ctx = image.ctx();
+
+        this.setCtx(ctx);
 
         this.current(image);
         this.add(image);
@@ -378,6 +407,10 @@ var Draw = class Draw {
 
         text.draw();
 
+        let ctx = text.ctx();
+
+        this.setCtx(ctx);
+
         return this;
     }
 
@@ -423,22 +456,26 @@ var Draw = class Draw {
     }
 
     overlay(color, x, y, radius) {
-        this
-            .begin()
-            .color(color)
-            .rectangle(
-                0,
-                0,
-                this._width,
-                this._height,
-                'destination'
-            );
 
         this
-            .color('rgba(0, 0, 0, 1)')
-            .circle(x, y, radius, 0, 360, false, 'over')
-            .fill()
-            .close();
+            .color('rgba(255, 255, 255, 0.7)')
+            .rectangle(
+                0, 0,
+                this._width, this._height,
+                'source-over'
+            )
+            .fill();
+
+        this
+            .color('rgba(255, 255, 255, 1)')
+            .circle(
+                x, y,
+                radius,
+                0, 360,
+                false,
+                'destination-out'
+            )
+            .fill();
 
         return this;
     }

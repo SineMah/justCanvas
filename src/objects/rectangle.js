@@ -68,15 +68,19 @@ var rectangle = class Rectangle extends Form {
 
     draw() {
 
+        this.overlay();
+
         this.ctx().fillStyle = this.color();
 
         this.ctx().fillRect(this.x(), this.y(), this.width(), this.height());
+
 
         return this;
     }
 
     overlay(mode) {
-        let operation = this.overlayMode(mode || this._overlay);
+        // let operation = this.overlayMode(mode || this._overlay);
+        let operation = mode || this._overlay;
 
         if(operation) {
 
