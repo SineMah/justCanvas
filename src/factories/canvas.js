@@ -149,6 +149,10 @@ var Canvas = class Canvas {
 
     stop() {
 
+        let event = new CustomEvent('jc-image-animation-stop');
+
+        document.dispatchEvent(event);
+
         Animation.stop();
 
         return this;
