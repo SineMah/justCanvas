@@ -138,9 +138,10 @@ var Canvas = class Canvas {
         return this._draw;
     }
 
-    animate(callback) {
+    animate(callback, fps) {
 
         Animation
+            .refreshRate(fps)
             .setup(this, callback)
             .animate();
 

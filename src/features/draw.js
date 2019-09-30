@@ -514,7 +514,7 @@ var Draw = class Draw {
             shape._id = existingShape._id;
         }else {
 
-            window.shapeStore.add(this._current);
+            window.shapeStore.add(shape);
         }
 
         return shape;
