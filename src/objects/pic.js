@@ -132,12 +132,63 @@ var pic = class Pic extends Form {
         return this;
     }
 
+    drawZoom2(zoomFactor, x, y) {
+        let factor = zoomFactor.zoomFactor(true);
+
+        if(factor === 0) {
+
+            factor = 1;
+        }
+
+        if(!x) {
+
+            x = 0;
+        }
+
+        if(!y) {
+
+            y = 0;
+        }
+
+        this.ctx().setZoom(factor);
+
+        if(factor > 1) {
+
+            if(x === 0 || y === 0) {
+
+                this.ctx().setCenterPoint(
+                    factor*this.ctx().canvas.width/2,
+                    factor*this.ctx().canvas.height/2
+                );
+            }else {
+
+                // console.log(this.ctx().getLastOffset());
+
+                // TODO get offset from this.ctx().mousePosition
+            }
+        }else {
+
+            this.ctx().setOffsetPoint(0, 0);
+        }
+
+        this.ctx().drawImageZoom(
+            this.image(),
+            0,0,
+            this._image.width, this._image.height,
+            // this.x(), this.y(),
+            0, 0,
+            this.ctx().canvas.width, this.ctx().canvas.height
+        );
+
+        return this;
+    }
+
     inShape(position) {
         let x = this._position[0],
             y = this._position[1],
             canvas = document.getElementById(this.ctx().canvas.id),
-            _x  = this._ctx.canvas.width/canvas.clientWidth,
-            _y  = this._ctx.canvas.height/canvas.clientHeight,
+            _x  = this.ctx().canvas.width/canvas.clientWidth,
+            _y  = this.ctx().canvas.height/canvas.clientHeight,
             inShape = false;
 
         position.left = _x * position.left;

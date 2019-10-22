@@ -4,9 +4,9 @@ import Form from '../objects/form.js';
 
 var text = class Text extends Form {
 
-    constructor(ctx, text) {
+    constructor(id, text) {
 
-        super(ctx);
+        super(id);
 
         this._x = 0;
         this._y = 0;

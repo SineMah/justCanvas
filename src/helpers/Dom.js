@@ -13,7 +13,7 @@ var Dom = class Dom {
             // top  = box.top +  scrollTop - clientTop,
             top  = box.top - clientTop,
             // left = box.left + scrollLeft - clientLeft;
-            left = box.left - clientLeft;
+            left = box.left- clientLeft;
 
         return {
             top: Math.round(top),

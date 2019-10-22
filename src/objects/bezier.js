@@ -4,9 +4,9 @@ import Form from '../objects/form.js';
 
 var bezier = class Bezier extends Form {
 
-	constructor(ctx) {
+	constructor(id) {
 
-        super(ctx);
+        super(id);
 
         this._coordinates = [];
 	}

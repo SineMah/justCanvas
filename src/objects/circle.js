@@ -5,9 +5,9 @@ import Calc from '../helpers/calc.js';
 
 var circle = class Circle extends Form {
 
-    constructor(ctx, overlay) {
+	constructor(id, overlay) {
 
-        super(ctx);
+        super(id);
 
         this._x = 0;
         this._y = 0;
@@ -17,7 +17,7 @@ var circle = class Circle extends Form {
         this._direction = false;
 
         this._overlay = overlay || false;
-    }
+	}
 
     r(value) {
 
@@ -87,11 +87,11 @@ var circle = class Circle extends Form {
         this.overlay();
 
         this.ctx().arc(
-            this.x(),
-            this.y(),
-            this.r(),
-            Calc.degreesToRadians(this.start()),
-            Calc.degreesToRadians(this.end()),
+            this.x(), 
+            this.y(), 
+            this.r(), 
+            Calc.degreesToRadians(this.start()), 
+            Calc.degreesToRadians(this.end()), 
             this.direction()
         );
 
@@ -99,15 +99,15 @@ var circle = class Circle extends Form {
     }
 
     overlay(mode) {
-        // let operation = this.overlayMode(mode || this._overlay);
-        let operation = mode || this._overlay;
+	    // let operation = this.overlayMode(mode || this._overlay);
+	    let operation = mode || this._overlay;
 
-        if(operation) {
+	    if(operation) {
 
             this.ctx().globalCompositeOperation = operation;
         }
 
-        return this;
+	    return this;
     }
 
     inShape(position) {
@@ -119,7 +119,7 @@ var circle = class Circle extends Form {
             inShape = true;
         }
 
-        return inShape;
+	    return inShape;
     }
 };
 

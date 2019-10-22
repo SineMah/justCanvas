@@ -1,37 +1,33 @@
 'use strict';
 
 import String from '../helpers/string.js';
+import Store from '../features/store.js';
 
 var form = class Form {
 
-    constructor(ctx) {
+	constructor(id) {
 
-        this._ctx = ctx;
-        this._id = String.getId();
-        this._color = '#000000';
-    }
+		this._canvasId = id;
+		this._id = String.getId();
+		this._color = '#000000';
+	}
 
-    ctx(value) {
+	ctx() {
 
-        if(typeof value === 'undefined')
-            return this._ctx;
+		return Store.get(this._canvasId).context();
+	}
 
-        this._ctx = value;
+	id(value) {
 
-        return this;
-    }
+		if(typeof value === 'undefined')
+			return this._id;
 
-    id(value) {
+		this._id = value;
 
-        if(typeof value === 'undefined')
-            return this._id;
+		return this;
+	}
 
-        this._id = value;
-
-        return this;
-    }
-
-    color(value) {
+	color(value) {
 
         if(typeof value === 'undefined')
             return this._color;
@@ -59,46 +55,46 @@ var form = class Form {
 
     inShape() {
 
-        return false;
-    }
+		return false;
+	}
 
-    setId() {
+	setId() {
 
-        this._id = this.serialize();
+		this._id = this.serialize();
 
-        return this;
-    }
+		return this;
+	}
 
-    serialize() {
-        let color = this._color || 'null',
-            x = this._x || 'null',
-            y = this._y || 'null',
-            r = this._r || 'null',
-            i = typeof this._image === 'undefined' ? '0' : '1';
+	serialize() {
+		let color = this._color || 'null',
+			x = this._x || 'null',
+			y = this._y || 'null',
+			r = this._r || 'null',
+			i = typeof this._image === 'undefined' ? '0' : '1';
 
-        if(typeof this._offset !== 'undefined') {
+		if(typeof this._offset !== 'undefined') {
 
-            x = this._offset[0];
-            y = this._offset[1];
-        }
+			x = this._offset[0];
+			y = this._offset[1];
+		}
 
-        return `id-${this._ctx.canvas.id}-x:${Number(x).toFixed(2)}-y:${Number(y).toFixed(2)}-r:${r}-c${color}-i:${i}`;
-    }
+		return `id-${this.ctx().canvas.id}-x:${Number(x).toFixed(2)}-y:${Number(y).toFixed(2)}-r:${r}-c${color}-i:${i}`;
+	}
 
-    overlayMode(mode) {
-        let composite = false;
+	overlayMode(mode) {
+		let composite = false;
 
-        switch (mode) {
-            case 'over':
-                composite = 'source-over';
-                break;
-            case 'destination':
-                composite = 'destination-out';
-                break;
-        }
+		switch (mode) {
+			case 'over':
+				composite = 'source-over';
+				break;
+			case 'destination':
+				composite = 'destination-out';
+				break;
+		}
 
-        return composite;
-    }
+		return composite;
+	}
 };
 
 export default form;

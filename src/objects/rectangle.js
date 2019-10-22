@@ -4,9 +4,9 @@ import Form from '../objects/form.js';
 
 var rectangle = class Rectangle extends Form {
 
-    constructor(ctx, overlay) {
+	constructor(id, overlay) {
 
-        super(ctx);
+        super(id);
 
         this._x = 0;
         this._y = 0;
@@ -14,7 +14,7 @@ var rectangle = class Rectangle extends Form {
         this._width = 0;
 
         this._overlay = overlay || false;
-    }
+	}
 
     coordinates(startX, startY) {
 
@@ -93,13 +93,13 @@ var rectangle = class Rectangle extends Form {
     inShape(position) {
         let inShape = false;
 
-        if(position.top >= this._y && position.top <= this._y + this._height &&
+	    if(position.top >= this._y && position.top <= this._y + this._height &&
             position.left >= this._x && position.left <= this._x + this._width) {
 
-            inShape = true
+	        inShape = true
         }
 
-        return inShape;
+	    return inShape;
     }
 };
 

@@ -6,19 +6,19 @@ import Circle from '../objects/circle.js';
 import Rectangle from '../objects/rectangle.js';
 import Pic from '../objects/pic.js';
 import Text from '../objects/text.js';
+import Store from '../features/store.js';
 
 import Event from "../helpers/event.js";
 
 var Draw = class Draw {
 
-    constructor(id, ctx) {
+    constructor(id, canvas) {
 
-        this._canvas = null;
-        this._ctx = null;
+        this._id = id;
+        this._canvas = canvas || null;
         this._color = '#000000';
 
         this.canvas(id);
-        this.ctx(true);
 
         this._current = null;
         this._collection = {};
@@ -27,19 +27,23 @@ var Draw = class Draw {
         this._cache = [];
         this._currentZoomFactor = 1;
 
-        this._width = ctx._width;
-        this._height = ctx._height;
+        this._width = canvas._width;
+        this._height = canvas._height;
 
         this._overlay = document.createElement('canvas');
     }
 
     canvas(id) {
 
-        if(typeof id === 'undefined')
-            return this._canvas;
+        if(typeof id === 'undefined') {
 
-        this._canvas = document.getElementById(id);
-        this._ctx = this._canvas.getContext('2d');
+            return Store.get(this._id).canvas();
+        }
+
+        this._id = id;
+
+        Store.create(id);
+        Store.get(id).context().setZoomPoint(1);
 
         return this;
     }
@@ -63,14 +67,7 @@ var Draw = class Draw {
 
     ctx() {
 
-        return this._ctx;
-    }
-
-    setCtx(ctx) {
-
-        this._ctx = ctx;
-
-        return this;
+        return Store.get(this._id).ctx();
     }
 
     begin()  {
@@ -103,7 +100,7 @@ var Draw = class Draw {
         let e = new Event(this._current._id, eventName, callback);
 
         e.shape = this._current;
-        e.canvas = this._ctx.canvas.id;
+        e.canvas = this.ctx().canvas.id;
 
         if(!window.eventStore.exists(e)) {
             // console.log(e);
@@ -121,7 +118,7 @@ var Draw = class Draw {
         let e = new Event(this._current._id, 'mousemove', callback);
 
         e.shape = this._current;
-        e.canvas = this._ctx.canvas.id;
+        e.canvas = this.ctx().canvas.id;
         e.custom = 'hover';
 
         if(typeof cursor === 'undefined') {
@@ -162,7 +159,7 @@ var Draw = class Draw {
     }
 
     line(coordinates) {
-        let line = new Line(this.ctx());
+        let line = new Line(this._id);
 
         line
             .coordinates(coordinates)
@@ -179,7 +176,7 @@ var Draw = class Draw {
     }
 
     bezier(coordinates) {
-        let bezier = new Bezier(this.ctx());
+        let bezier = new Bezier(this._id);
 
         bezier
             .coordinates(coordinates)
@@ -196,7 +193,7 @@ var Draw = class Draw {
     }
 
     rectangle(startX, startY, width, height, overlay) {
-        let rectangle = new Rectangle(this.ctx(), overlay);
+        let rectangle = new Rectangle(this._id, overlay);
 
         rectangle
             .x(startX)
@@ -209,9 +206,6 @@ var Draw = class Draw {
 
         rectangle = this.addShape(rectangle);
 
-        let ctx = rectangle.ctx();
-
-        this.setCtx(ctx);
         this.current(rectangle);
         this.add(rectangle);
 
@@ -219,7 +213,7 @@ var Draw = class Draw {
     }
 
     circle(x, y, r, startAngle, endAngle, direction, overlay) {
-        let circle = new Circle(this.ctx(), overlay);
+        let circle = new Circle(this._id, overlay);
 
         if(typeof startAngle === 'undefined')
             startAngle = 0;
@@ -244,10 +238,6 @@ var Draw = class Draw {
 
         circle = this.addShape(circle);
 
-        let ctx = circle.ctx();
-
-        this.setCtx(ctx);
-
         this.current(circle);
         this.add(circle);
 
@@ -271,17 +261,13 @@ var Draw = class Draw {
             scale = true;
         }
 
-        let image = new Pic(this.ctx(), img, x, y);
+        let image = new Pic(this._id, img, x, y);
 
         image.setId();
 
         image.draw(scale);
 
         image = this.addShape(image);
-
-        let ctx = image.ctx();
-
-        this.setCtx(ctx);
 
         this.current(image);
         this.add(image);
@@ -291,7 +277,7 @@ var Draw = class Draw {
     }
 
     imagePointer(img, x, y) {
-        let image = new Pic(this.ctx(), img);
+        let image = new Pic(this._id, img);
 
         image.offset(x, y);
 
@@ -301,10 +287,6 @@ var Draw = class Draw {
 
         image = this.addShape(image);
 
-        let ctx = image.ctx();
-
-        this.setCtx(ctx);
-
         this.current(image);
         this.add(image);
 
@@ -312,7 +294,67 @@ var Draw = class Draw {
         return this;
     }
 
+    // imageZoom(img, zoomFactor, x, y) {
+    //
+    //     if(typeof x === 'undefined') {
+    //
+    //         x = 0;
+    //     }
+    //
+    //     if(typeof y === 'undefined') {
+    //
+    //         y = 0;
+    //     }
+    //
+    //     let image = new Pic(this._id, img),
+    //         factor = zoomFactor.zoomFactor(true),
+    //         _factor = zoomFactor.getTranspose();
+    //
+    //     if(factor > 1) {
+    //
+    //         if(this._center.x === null || this._center.y === null) {
+    //
+    //             this._center.x = _factor*img.width/2;
+    //             this._center.y = _factor*img.height/2;
+    //
+    //         }else {
+    //
+    //             this._center.y = _factor*this._center.y/this._currentZoomFactor;
+    //             this._center.x = _factor*this._center.x/this._currentZoomFactor;
+    //         }
+    //
+    //         // console.log('draw');
+    //         // console.log(this._center);
+    //         // console.log(x, y);
+    //         // console.log('***');
+    //
+    //         x = this._center.x - x;
+    //         y = this._center.y - y;
+    //
+    //         this._cache.push({
+    //             x: x,
+    //             y: y
+    //         });
+    //     }
+    //
+    //     image.setId();
+    //
+    //     image.drawZoom(zoomFactor, x, y);
+    //
+    //     this.current(image);
+    //     this.add(image);
+    //
+    //     if(_factor !== 0) {
+    //
+    //         this._currentZoomFactor = _factor;
+    //     }
+    //
+    //     return this;
+    // }
+
     imageZoom(img, zoomFactor, x, y) {
+        let image = new Pic(this._id, img);
+
 
         if(typeof x === 'undefined') {
 
@@ -324,52 +366,44 @@ var Draw = class Draw {
             y = 0;
         }
 
-        let image = new Pic(this.ctx(), img),
-            factor = zoomFactor.zoomFactor(true),
-            _factor = zoomFactor.getTranspose();
-
-        if(factor > 1) {
-
-            if(this._center.x === null || this._center.y === null) {
-
-                this._center.x = _factor*img.width/2;
-                this._center.y = _factor*img.height/2;
-
-            }else {
-
-                this._center.y = _factor*this._center.y/this._currentZoomFactor;
-                this._center.x = _factor*this._center.x/this._currentZoomFactor;
-            }
-
-            // console.log('draw');
-            // console.log(this._center);
-            // console.log(x, y);
-            // console.log('***');
-
-            x = this._center.x - x;
-            y = this._center.y - y;
-
-            this._cache.push({
-                x: x,
-                y: y
-            });
-        }
+        // if(factor > 1) {
+        //
+        //     if(this._center.x === null || this._center.y === null) {
+        //
+        //         this._center.x = factor*img.width/2;
+        //         this._center.y = factor*img.height/2;
+        //
+        //         this._center.x = 720/2;
+        //         this._center.y = 405/2;
+        //
+        //     }else {
+        //
+        //         this._center.y = factor*this._center.y/this._currentZoomFactor;
+        //         this._center.x = factor*this._center.x/this._currentZoomFactor;
+        //     }
+        //
+        //     x = this._center.x - x;
+        //     y = this._center.y - y;
+        //
+        //     this._cache.push({
+        //         x: x,
+        //         y: y
+        //     });
+        // }
 
         image.setId();
 
-        image.drawZoom(zoomFactor, x, y);
+        // image.drawZoom2(zoomFactor, x, y);
+        image.drawZoom2(zoomFactor, x, y);
 
-        let ctx = image.ctx();
-
-        this.setCtx(ctx);
-
-        this.current(image);
-        this.add(image);
-
-        if(_factor !== 0) {
-
-            this._currentZoomFactor = _factor;
-        }
+        // draw spots
+        // this.ctx.drawImage(
+        //     pointer,
+        //     0, 0,
+        //     pointer.width, pointer.height,
+        //     442  +  ((1 - 1/zoom)*pointer.width/2), 207 + (1 - 1/zoom)*pointer.height,
+        //     pointer.width/zoom, pointer.height/zoom
+        // );
 
         return this;
     }
@@ -408,10 +442,6 @@ var Draw = class Draw {
         }
 
         text.draw();
-
-        let ctx = text.ctx();
-
-        this.setCtx(ctx);
 
         return this;
     }
@@ -534,6 +564,14 @@ var Draw = class Draw {
             width: metrics.width,
             height: size
         }
+    }
+
+    flush() {
+        let context = Store.get(this._id).context();
+
+        context.clearRect(0, 0, this._canvas._width, this._canvas._height);
+
+        return this;
     }
 };
 

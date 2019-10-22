@@ -7,6 +7,7 @@ import EventStore from '../helpers/eventStore.js';
 import ShapeStore from '../helpers/shapeStore.js';
 import AnimationStore from '../helpers/animationStore.js';
 import EventQueue from '../features/eventQueue.js';
+import Store from '../features/store.js';
 
 var Canvas = class Canvas {
 
@@ -38,6 +39,8 @@ var Canvas = class Canvas {
         }
 
         window.eventStore.toggle();
+
+        new Store();
     }
 
     id(value) {
@@ -173,6 +176,17 @@ var Canvas = class Canvas {
 
         return this._events;
     }
+
+    static store() {
+
+        return Store;
+    }
+
+    store() {
+
+        return Store;
+    }
+
 };
 
 export default Canvas;
