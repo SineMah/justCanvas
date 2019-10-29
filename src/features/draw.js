@@ -96,11 +96,14 @@ var Draw = class Draw {
         return this;
     }
 
-    on(eventName, callback) {
+    on(eventName, callback, config) {
         let e = new Event(this._current._id, eventName, callback);
 
         e.shape = this._current;
         e.canvas = this.ctx().canvas.id;
+        e.link = config._link || null;
+        e.customTitle = config._title || null;
+        e.customText = config._text || null;
 
         if(!window.eventStore.exists(e)) {
             // console.log(e);
@@ -115,11 +118,16 @@ var Draw = class Draw {
     }
 
     hover(cursor, callback, config) {
+
+        this._current = config;
+
         let e = new Event(this._current._id, 'mousemove', callback);
 
         e.shape = this._current;
         e.canvas = this.ctx().canvas.id;
         e.custom = 'hover';
+        e.customText = config._text;
+        e.customTitle = config._title;
 
         if(typeof cursor === 'undefined') {
 
@@ -156,6 +164,25 @@ var Draw = class Draw {
         this._collection[formObject.id()] = formObject;
 
         return this;
+    }
+
+    dummyShape(startX, startY, width, height, debug) {
+        let rectangle = new Rectangle(this._id);
+
+        rectangle
+            .x(startX)
+            .y(startY)
+            .width(width)
+            .height(height)
+            .color(this.color())
+            .setId();
+
+        if(debug) {
+
+            rectangle.draw();
+        }
+
+        return rectangle;
     }
 
     line(coordinates) {
@@ -409,7 +436,7 @@ var Draw = class Draw {
     }
 
     text(charArray, x, y, color, size, font) {
-        let text = new Text(this.ctx(), charArray);
+        let text = new Text(this._id, charArray);
 
         if(typeof x === 'undefined') {
 

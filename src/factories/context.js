@@ -60,10 +60,17 @@ var Context = class Context {
         context._zoomPoint = [];
         context._offset = [];
         context._useCenter = false;
+        context._matrix = [1, 0, 0,
+            1, 0, 0];
+        context._matrixSaved = [1, 0, 0,
+            1, 0, 0];
 
         context.point = (x, y) => {
             let svg = document.createElementNS("http://www.w3.org/2000/svg",'svg'),
                 point = svg.createSVGPoint();
+
+            // console.log(x, y);
+            // console.trace();
 
             point.x = x;
             point.y = y;
@@ -225,6 +232,56 @@ var Context = class Context {
         context.flushCenter = () => {
 
             context._center = [];
+
+            return this;
+        };
+
+        context.scaleCustom = (x, y) => {
+
+            context._matrix[0] *= x;
+            context._matrix[1] *= x;
+            context._matrix[2] *= y;
+            context._matrix[3] *= y;
+
+            context.scale(x,y);
+
+            return this;
+        };
+
+        context.translateCustom = (x, y) => {
+
+            context._matrix[5] += context._matrix[1]*x + context._matrix[3]*y;
+            context._matrix[4] += context._matrix[0]*x + context._matrix[2]*y;
+
+            context.translate(x, y);
+
+            return this;
+        };
+
+        context.convertCoordinates = (x, y) => {
+            let _x = context._matrix[0]*x + context._matrix[2]*y + context._matrix[4],
+                _y = context._matrix[1]*x + context._matrix[3]*y + context._matrix[5],
+                point = context.point(_x, _y);
+
+            return point;
+        };
+
+        context.saveCustom = () => {
+
+            // context._matrixSaved = context._matrix;
+
+            context.save();
+
+            return this;
+        };
+
+        context.restoreCustom = () => {
+
+            // context._matrix = context._matrixSaved;
+            context._matrix = [1, 0, 0,
+                                1, 0, 0];
+
+            context.restore();
 
             return this;
         };

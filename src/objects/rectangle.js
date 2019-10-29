@@ -74,7 +74,6 @@ var rectangle = class Rectangle extends Form {
 
         this.ctx().fillRect(this.x(), this.y(), this.width(), this.height());
 
-
         return this;
     }
 
@@ -92,6 +91,8 @@ var rectangle = class Rectangle extends Form {
 
     inShape(position) {
         let inShape = false;
+
+        // console.log(position, {x: this._x, y: this._y});
 
 	    if(position.top >= this._y && position.top <= this._y + this._height &&
             position.left >= this._x && position.left <= this._x + this._width) {
